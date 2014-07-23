@@ -1,1 +1,1 @@
-ZeroMQ Reliable Request-Reply Paranoid Pirate Pattern example - queue
+ZeroMQ Reliable Request-Reply Paranoid Pirate Pattern - queue module
