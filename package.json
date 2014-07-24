@@ -14,8 +14,11 @@
     "zmq",
     "zeromq",
     "pirate",
-    "lazy",
-    "client"
+    "paranoid",
+    "queue",
+    "reliable",
+    "request",
+    "reply"
   ],
   "author": "Luke Bond <luke.n.bond@gmail.com>",
   "license": "ISC",

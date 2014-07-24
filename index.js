@@ -50,7 +50,6 @@ PPQueue.prototype._workerReady = function (identity) {
       // reset the timer
       clearTimeout(this.workers[i].timerId);
       this.workers[i].timerId = setTimeout(this._getPurgeWorkerTimeoutFn(identity), this.heartbeatInterval * this.heartbeatLiveness);
-      //this.workers.splice(i, 1);
       found = true;
       break;
     }
