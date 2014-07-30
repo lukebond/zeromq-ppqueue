@@ -1,7 +1,7 @@
 var async = require('async'),
-    assert = require('assert'),
     zmq = require('zmq'),
-    util = require('util');
+    util = require('util'),
+    EventEmitter = require('events').EventEmitter;
 
 var PPQueue = function (options) {
   this.heartbeatLiveness = options.heartbeatLiveness || 5;
@@ -30,7 +30,9 @@ var PPQueue = function (options) {
         // we've already marked this worker as ready, above; nothing more to do
       }
       else {
-        this.frontend.send([args[1], this.PPP_DELIMITER, args[2]]);
+        var message = [args[1], this.PPP_DELIMITER, args[2]];
+        this.frontend.send(message);
+        this.emit('frontend', message.toString('utf8'));
       }
     }.bind(this));
 
@@ -38,10 +40,18 @@ var PPQueue = function (options) {
     var args = Array.apply(null, arguments);
     // send frontend message to next available worker
     var nextWorker = this._workerNext();
-    assert(nextWorker, 'No workers are ready');
-    this.backend.send([nextWorker.identity, args[1], args[0]]);
+    if (!nextWorker) {
+      this.emit('no workers');
+    }
+    else {
+      var message = [nextWorker.identity, args[1], args[0]];
+      this.backend.send(message);
+      this.emit('backend', message.toString('utf8'));
+    }
   }.bind(this));
 };
+
+util.inherits(PPQueue, EventEmitter);
 
 PPQueue.prototype._workerReady = function (identity) {
   var found = false;
