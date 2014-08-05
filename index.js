@@ -93,6 +93,7 @@ PPQueue.prototype._workerNext = function () {
 PPQueue.prototype._doHeartbeat = function () {
   async.each(this.workers, function (worker, cb) {
     this.backend.send([worker.identity, this.PPP_DELIMITER, this.PPP_HEARTBEAT]);
+    cb();
   }.bind(this));
 };
 
