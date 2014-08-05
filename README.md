@@ -65,6 +65,10 @@ $ node ppworker
 
 The Paranoid Pirate queue is routing the request-reply pairs between the client and the worker.
 
+## Tests
+
+A bit thin on the ground at the moment, but there is an integration test in this project that tests Lazy Pirate client, Paranoid Pirate queue and Paranoid Pirate worker together.
+
 ## Licence
 
 MIT
