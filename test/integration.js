@@ -14,7 +14,7 @@ var workerReceived = [];
 var workerSent = [];
 var queueBackendSent = [];
 var queueFrontendSent = [];
-var maxMessages = 1000;
+var maxMessages = 100;
 var clientWaitTime = 10;
 var giveupTimeout = 5000;
 var giveupTimer = -1;
@@ -34,12 +34,16 @@ function resetGiveupTimer() {
 
 function getMissingFromSeq(arr, count) {
   var missing = [];
-  var prev = -1;
-  for (var i = 0; i < count; ++i) {
-    if (parseInt(arr[i]) !== (prev + 1)) {
-      missing.push(i);
-      prev = i;
+  var lookingFor = 0;
+  var i = 0;
+  while (i < count && i < arr.length) {
+    if (parseInt(arr[i]) !== lookingFor) {
+      missing.push(lookingFor);
     }
+    else {
+      ++i;
+    }
+    ++lookingFor;
   }
   return missing;
 }
@@ -55,35 +59,35 @@ function printResults() {
   var success = clientReqsMatch;
   if (!clientReqsMatch) {
     success = false;
-    console.log(error('Client messages not received: ' + getMissingFromSeq(clientReceived, maxMessages)));
+    console.log(error('Client messages not received: ' + getMissingFromSeq(clientReceived, maxMessages).toString()));
   }
   else {
     console.log(good('Client received back all requested messages'));
   }
   if (allReqsSent && workerReceived.length !== maxMessages) {
     success = false;
-    console.log(error('Worker didn\'t receive: ' + getMissingFromSeq(workerReceived, maxMessages)));
+    console.log(error('Worker didn\'t receive: ' + getMissingFromSeq(workerReceived, maxMessages).toString()));
   }
   else {
     console.log(good('Worker received all messages sent from the client'));
   }
   if (allReqsSent && workerSent.length !== maxMessages) {
     success = false;
-    console.log(error('Worker didn\'t send: ' + getMissingFromSeq(workerSent, maxMessages)));
+    console.log(error('Worker didn\'t send: ' + getMissingFromSeq(workerSent, maxMessages).toString()));
   }
   else {
     console.log(good('Worker sent all messages to the queue'));
   }
   if (allReqsSent && queueBackendSent.length !== maxMessages) {
     success = false;
-    console.log(error('Queue didn\'t send to worker: ' + getMissingFromSeq(queueBackendSent, maxMessages)));
+    console.log(error('Queue didn\'t send to worker: ' + getMissingFromSeq(queueBackendSent, maxMessages).toString()));
   }
   else {
     console.log(good('Queue sent all messages to the worker'));
   }
   if (allReqsSent && queueFrontendSent.length !== maxMessages) {
     success = false;
-    console.log(error('Queue didn\'t send to client: ' + getMissingFromSeq(queueFrontendSent, maxMessages)));
+    console.log(error('Queue didn\'t send to client: ' + getMissingFromSeq(queueFrontendSent, maxMessages).toString()));
   }
   else {
     console.log(good('Queue sent all messages to the client'));
@@ -93,10 +97,10 @@ function printResults() {
 
 function ppWorkerFn(cb) {
   // generate message with sequence number
+  cb('' + seq);
   ++seq;
   workerReceived.push(seq);
-  debugWorker('Produced ' + (seq + 1));
-  return cb('' + seq);
+  debugWorker('Produced ' + seq);
 }
 
 var ppq = new PPQueue({backendUrl: 'tcp://127.0.0.1:9001', frontendUrl: 'tcp://127.0.0.1:9000'})
