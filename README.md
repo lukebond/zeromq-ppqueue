@@ -8,6 +8,19 @@ Don't know what this is? See the [0MQ Guide](http://zguide.zeromq.org/page:all#t
 
 Use in conjunction with [Lazy Pirate Server](https://github.com/lukebond/zeromq-lpserver) and [Paranoid Pirate Worker](https://github.com/lukebond/zeromq-ppworker).
 
+Make sure you have 0MQ installed on your machine first (ie. the C libraries). For OS X you can do this:
+
+```
+$ brew install --universal zeromq
+```
+
+On Ubuntu:
+```
+$ sudo apt-get -y install libzmq3-dev
+```
+
+Then you should be able to install NPM modules that depend upon the 0MQ libs (like this one).
+
 ### Paranoid Pirate example
 
 For Paranoid Pirate we need three components- the Lazy Pirate client, Paranoid Pirate queue and Paranoid Pirate worker.
