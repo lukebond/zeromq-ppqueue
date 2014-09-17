@@ -24,7 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^0.9.0",
-    "zmq": "2.7.x"
+    "zmq": "^2.8.0"
   },
   "devDependencies": {
     "cli-color": "^0.3.2",
